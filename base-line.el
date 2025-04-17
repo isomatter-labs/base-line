@@ -277,7 +277,7 @@
 
 (defun base-line-segment-major-mode ()
   "Displays the current major mode in the mode-line."
-  (concat "//  「" (format-mode-line mode-name 'base-line-major-mode) "」  //  "))
+  (concat "// 「" (format-mode-line mode-name 'base-line-major-mode) "」 //  "))
 
 (defun base-line-segment-misc-info ()
   "Displays the current value of `mode-line-misc-info' in the mode-line."
