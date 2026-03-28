@@ -3,7 +3,7 @@
 ;; Author: M Cooper Healy <m.cooper.healy@gmail.com>
 ;; Homepage: https://github.com/noonels/base-line
 ;; Keywords: base-line faces
-;; Version: 0.10
+;; Version: 0.11
 ;; Package-Requires: ((emacs "25.1"))
 
 ;; This file is not part of GNU Emacs.
@@ -44,6 +44,8 @@
 ;; Floor, Boston, MA 02110-1301, USA.
 
 ;;; Code:
+
+(require 'cl-lib)
 
 ;;
 ;; Variable declarations
@@ -271,11 +273,24 @@
                     (t (upcase (symbol-name (plist-get sys :name))))))
             "  ")))
 
+(defcustom base-line-minor-mode-allowlist nil
+  "List of minor mode symbols whose lighters should be displayed.
+Only modes in this list will have their lighters shown.
+An empty list means no minor mode lighters are displayed."
+  :group 'base-line
+  :type '(repeat symbol))
+
 (defun base-line-segment-minor-modes ()
-  "Displays active minor mode lighters in the mode-line."
-  (let ((lighters (format-mode-line minor-mode-alist)))
-    (unless (string= (base-line--string-trim lighters) "")
-      (concat (base-line--string-trim lighters) "  "))))
+  "Displays active minor mode lighters in the mode-line.
+Only modes listed in `base-line-minor-mode-allowlist' are shown."
+  (when base-line-minor-mode-allowlist
+    (let* ((modes (cl-remove-if-not
+                   (lambda (entry)
+                     (memq (car entry) base-line-minor-mode-allowlist))
+                   minor-mode-alist))
+           (lighters (format-mode-line modes)))
+      (unless (string= (base-line--string-trim lighters) "")
+        (concat (base-line--string-trim lighters) "  ")))))
 
 (defun base-line-segment-vc ()
   "Displays color-coded version control information in the mode-line."
