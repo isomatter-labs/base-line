@@ -3,7 +3,7 @@
 ;; Author: M Cooper Healy <m.cooper.healy@gmail.com>
 ;; Homepage: https://github.com/noonels/base-line
 ;; Keywords: base-line faces
-;; Version: 0.9
+;; Version: 0.10
 ;; Package-Requires: ((emacs "25.1"))
 
 ;; This file is not part of GNU Emacs.
@@ -271,6 +271,12 @@
                     (t (upcase (symbol-name (plist-get sys :name))))))
             "  ")))
 
+(defun base-line-segment-minor-modes ()
+  "Displays active minor mode lighters in the mode-line."
+  (let ((lighters (format-mode-line minor-mode-alist)))
+    (unless (string= (base-line--string-trim lighters) "")
+      (concat (base-line--string-trim lighters) "  "))))
+
 (defun base-line-segment-vc ()
   "Displays color-coded version control information in the mode-line."
   base-line--vc-text)
@@ -345,6 +351,7 @@
                           (format-mode-line
                            '((:eval (base-line-segment-eol))
                              (:eval (base-line-segment-encoding))
+                             (:eval (base-line-segment-minor-modes))
                              (:eval (base-line-segment-vc))
                              (:eval (base-line-segment-major-mode))
                              (:eval (base-line-segment-misc-info))
